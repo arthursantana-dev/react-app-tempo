@@ -8,7 +8,20 @@ export default function App() {
   const [weatherInfo, setWeatherInfo] = useState(new Array(7))
 
   function searchCityWeather(){
-    console.log(city);
+    const path = `http://api.weatherapi.com/v1/current.json?q=${city}&key=9d38b16d3ce742c0813220400230911`
+
+
+	fetch(path).then(res => res.json()).then(json => {
+		console.log(json);
+
+		setWeatherInfo([
+			`${json.location.name} - ${json.location.region}`,
+			`${json.current.temp_c}ºC`,
+			`${json.current.wind_kph}km/h`,
+			`${json.current.humidity}g/cm^3`,
+			`${json.current.vis_km}km`, ''
+		])
+	})
   }
 
   return (
