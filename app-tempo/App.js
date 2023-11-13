@@ -4,24 +4,28 @@ import { BackHandler, SafeAreaView, StyleSheet, Text, TextInput, TouchableHighli
 
 export default function App() {
   const [city, setCity] = useState('')
-  const [weatherTopic, setWeatherTopic] = useState(['Local', 'Temperature', 'Wind', 'Humidity', 'Visibility', 'Sunrise', 'Sunset'])
-  const [weatherInfo, setWeatherInfo] = useState(new Array(7))
+  const [hasCheckedWeather, setHasCheckedWeather] = useState(false)
+  const [weatherTopic, setWeatherTopic] = useState(['Local', 'Temperature', 'Wind', 'Humidity', 'Visibility'])
+  const [weatherInfo, setWeatherInfo] = useState(new Array(5))
 
   function searchCityWeather(){
+    setHasCheckedWeather(true)
+
     const path = `http://api.weatherapi.com/v1/current.json?q=${city}&key=9d38b16d3ce742c0813220400230911`
 
 
-	fetch(path).then(res => res.json()).then(json => {
-		console.log(json);
+    fetch(path).then(res => res.json()).then(json => {
+      console.log(json);
 
-		setWeatherInfo([
-			`${json.location.name} - ${json.location.region}`,
-			`${json.current.temp_c}ºC`,
-			`${json.current.wind_kph}km/h`,
-			`${json.current.humidity}g/cm^3`,
-			`${json.current.vis_km}km`, ''
-		])
-	})
+      setWeatherInfo([
+        `${json.location.name} - ${json.location.region}`,
+        `${json.current.temp_c}ºC`,
+        `${json.current.wind_kph}km/h`,
+        `${json.current.humidity}g/cm^3`,
+        `${json.current.vis_km}km`
+      ])
+      })
+
   }
 
   return (
@@ -37,7 +41,7 @@ export default function App() {
           <TextInput style={{flex: 1, height: 40, borderBottomWidth: 1, marginRight: 15}}
           value={city} onChangeText={setCity}/>
           <TouchableHighlight style={styles.button} onPress={searchCityWeather}>
-            <Text>Previsão do Tempo</Text>
+            <Text>{hasCheckedWeather? 'Nova Previsão' : 'Previsão do Tempo'}</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -73,8 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
     padding: 20,
-    paddingTop: 40,
-    flex: 1
+    paddingTop: 40
   },
   button: {
     backgroundColor: 'lightgray',
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     textAlign: 'left'
   },
   weatherInfo: {
-    flex: 6,
+    flex: 1,
     width: '100%',
     padding: 20
   },
